@@ -191,15 +191,21 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: 删除运行记录
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 1
-        keep_minimum_runs: 1
-        token: ${{ env.GITHUB_TOKEN }}
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "保留最近 1 条运行记录，删除旧记录..."
+        gh run list --workflow="Build iStore OS" --limit 50 --json databaseId --jq '.[].databaseId' | \
+          tail -n +2 | \
+          xargs -I {} gh run delete {} --yes || true
 
     - name: 删除自动发布的旧固件
-      uses: dev-drprasad/delete-older-releases@v0.3.4
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-      with:
-        keep_latest: 4
-        delete_tags: true
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "保留最新 4 个 Release，删除旧版本..."
+        gh release list --limit 100 --json tagName,publishedAt | \
+          jq -r '.[].tagName' | \
+          tail -n +5 | \
+          xargs -I {} gh release delete {} --yes --cleanup-tag || true
