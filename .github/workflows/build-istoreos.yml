@@ -87,13 +87,9 @@ jobs:
       env:
         FEEDS_CONF_PATH: ${{ matrix.ARCHITECTURE }}/${{ env.FEEDS_CONF }}
       run: |
-        echo "检查 openwrt 目录..."
-        ls -la openwrt 2>&1 || echo "openwrt 不存在"
-        [ -e "openwrt" ] || mkdir -p openwrt
-        [ -e "$FEEDS_CONF_PATH" ] && cp "$FEEDS_CONF_PATH" openwrt/"$FEEDS_CONF" || echo "feeds.conf 未找到，跳过"
+        [ -e "$FEEDS_CONF_PATH" ] && cp "$FEEDS_CONF_PATH" openwrt/"$FEEDS_CONF" || true
         chmod +x "$DIY_P1_SH"
         cd openwrt
-        echo "运行 diy-part1.sh..."
         "$GITHUB_WORKSPACE/$DIY_P1_SH"
 
     - name: 更新 feeds
