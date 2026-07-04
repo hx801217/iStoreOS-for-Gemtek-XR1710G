@@ -31,7 +31,7 @@ jobs:
     strategy:
       matrix:
         REPO_BRANCH:
-          - xr1710g-6.18
+          - xr1710g-6.18-integration
         ARCHITECTURE:
           - xr1710g
         os:
@@ -172,7 +172,7 @@ jobs:
         echo "
         💻 设备: XR1710G (Airoha AN7581)
 
-        📂 源码: YYH2913/openwrt (xr1710g-6.18) + iStore feeds
+        📂 源码: YYH2913/openwrt (xr1710g-6.18-integration) + iStore feeds
 
         🌳 分支: ${{ matrix.REPO_BRANCH }}
 
